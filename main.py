@@ -3,7 +3,8 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-Root_guild = discord.Object(681015774885838896)
+guild_id = int(os.environ["ROOT_GUILD"])
+Root_guild = discord.Object(guild_id)
 
 
 class Encer(commands.Bot):
