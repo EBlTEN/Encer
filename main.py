@@ -37,4 +37,4 @@ async def ping(interaction: discord.Interaction):
 
 # ここから下はコピーしない
 # Bot本体の起動
-bot.run("ODU2NDUzNTU0NjQyMjIzMTA1.YNBQhw.Wt8jxvwjRTNNnt5CGXqR0vE8_Zg")
+bot.run()
