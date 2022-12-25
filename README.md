@@ -1,0 +1,2 @@
+# Encer
+Discord_Bot
