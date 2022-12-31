@@ -1,0 +1,6 @@
+2022-12-29 02:28:54,336 __main__:43 on_ready [INFO]: Welcome to Encer#3241's console
+2022-12-29 02:30:21,450 on_ready [INFO]: Welcome to Encer#3241's console
+2022-12-29 02:37:24,019 [INFO] on_ready : Logged in to Encer#3241(id:856453554642223105)
+2022-12-29 02:39:41,917 [INFO] on_ready : Logged in to Encer#3241(ID: 856453554642223105)
+2022-12-29 03:30:29,612 [ERROR] setup_hook : Extension 'cogs.general' raised an error: SyntaxError: f-string: empty expression not allowed (general.py, line 20)
+2022-12-29 03:30:32,431 [INFO] on_ready : Logged in to Encer#3241(ID: 856453554642223105)
