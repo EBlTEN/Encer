@@ -17,11 +17,11 @@
             "class": "logging.FileHandler",
             "level": "INFO",
             "formatter": "simple",
-            "filename": "to be replaced"
+            "filename": "./logs/Encer.log"
         }
     },
     "loggers": {
-        "__main__": {
+        "Encer": {
             "level": "DEBUG",
             "handlers": [
                 "consoleHandler",
