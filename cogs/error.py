@@ -29,7 +29,7 @@ class Error(commands.Cog):
                               color=discord.Colour.from_rgb(255, 0, 0))
         embed.set_author(name=interaction.command.name)
         embed.set_footer(
-            text=f"#{interaction.id}")
+            text=f"Encer.error.message")
         await interaction.response.send_message(embed=embed)
 
         logger.error("%s (ID: %s)", error, interaction.id)

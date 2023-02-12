@@ -40,7 +40,6 @@ class Recruit(commands.Cog):
         member_list = embed.fields[0].value.split("\n")
         # 正規表現で人数を取得
         member_count = int(re.sub(r"\D+", "", embed.fields[0].name))
-        print(member_count)
 
         if custom_id == "join":
             # すでにlistの中にidがあったらエラーを返す
@@ -48,9 +47,9 @@ class Recruit(commands.Cog):
                 await interaction.response.send_message(
                     "すでに参加しています。", ephemeral=True)
             else:
-                # embedのvalueにuser idを追記
+                # embedのvalueにuser idを,member_countを-1して追記
                 embed.set_field_at(
-                    0, name="edited", value=f"{message.embeds[0].fields[0].value}\n<@{interaction.user.id}>")
+                    0, name=f"あと`{member_count-1}`人", value=f"{message.embeds[0].fields[0].value}\n<@{interaction.user.id}>")
                 await interaction.response.send_message("参加しました。", ephemeral=True)
         elif custom_id == "leave":
             # 要素の削除
@@ -61,9 +60,9 @@ class Recruit(commands.Cog):
                 await interaction.response.send_message("参加していません。")
             # 正常に削除できた場合の処理
             else:
-                # listをembedのfieldへ上書き
+                # listをembedのfieldへ上書き,member_countを+1
                 embed.set_field_at(
-                    0, name="edited", value="\n".join(member_list))
+                    0, name=f"あと`{member_count+1}`人", value="\n".join(member_list))
                 # messageの送信
                 await interaction.response.send_message("辞退しました。", ephemeral=True)
 
@@ -84,8 +83,9 @@ class Recruit(commands.Cog):
         embed = discord.Embed(title="募集", description=title)
         embed.add_field(name=f"あと`{limit}`人",
                         value=f"<@{interaction.user.id}>")
-        embed.set_footer(text=f"#{interaction.id}")
+        embed.set_footer(text=f"Encer.commands.recruit")
         await interaction.response.send_message(embed=embed, view=view)
+        # print(interaction.channel.last_message_id)
 
 
 async def setup(bot):

@@ -32,7 +32,15 @@ class Voice(commands.Cog):
         exclusion_names = []
 
         # VCのメンバーをlistで取得
-        vc_members = interaction.user.voice.channel.members
+        try:
+            vc_members = interaction.user.voice.channel.members
+        except AttributeError:
+            embed = discord.Embed(title="エラー", description="VCのidを取得できませんでした。",
+                                  color=discord.Colour.from_rgb(255, 0, 0))
+            embed.set_author(name=interaction.command.name)
+            embed.set_footer(
+                text=f"Encer.Voice.error")
+            await interaction.response.send_message(embed=embed)
 
         # 取得した要素の名前とidを抽出してdictにする
         vc_dict = {i.id: i.name for i in vc_members}
