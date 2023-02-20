@@ -1,12 +1,13 @@
 import json
 from logging import getLogger, config
 import os
+import time
 
 import discord
 from discord.ext import commands
 from discord import app_commands
 
-from modules import Embed_info
+import checker
 
 
 # loggerの設定ファイルを読み込み
@@ -40,8 +41,9 @@ class Encer(commands.Bot):
             logger.error(err)
 
         # slash commandを登録
-        self.tree.copy_global_to(guild=Root_guild)
-        await self.tree.sync(guild=Root_guild)
+        # self.tree.copy_global_to(guild=Root_guild)
+        await self.tree.sync()
+
 
         # intentsの定義
 intents = discord.Intents.all()
@@ -49,15 +51,15 @@ bot = Encer(command_prefix="League_of_legends",
             intents=intents, help_command=None)
 
 
-# ログインしたらコンソールにメッセージを表示
 @bot.event
 async def on_ready():
+    # ログインしたらコンソールにメッセージを表示
     logger.info("Logged in to %s (ID: %s)", bot.user, bot.user.id)
 
-# cogの管理コマンド群
 
-
+# cogの管理コマンド
 @bot.tree.command(name="cog", description="cogsフォルダ内に存在するcogの管理をする。")
+@discord.app_commands.check(checker.is_owner)
 # モードの入力補完設定
 @discord.app_commands.choices(
     mode=[
@@ -76,7 +78,8 @@ async def cog(interaction: discord.Interaction, mode: str, cog: str):
     elif mode == "unload":
         await bot.unload_extension(f"cogs.{cog}")
 
-    embed = Embed_info.success_embed(f"{cog} has been {mode}ed.")
+    embed = discord.Embed(title="Success", description=f"{cog} has been {mode}ed.",
+                          color=discord.Colour.from_rgb(0, 255, 0))
     await interaction.response.send_message(embed=embed, ephemeral=True)
     logger.info("%s has been %sed.", cog, mode)
 

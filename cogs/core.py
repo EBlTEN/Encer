@@ -1,15 +1,15 @@
 from logging import getLogger
+import time
 
 import discord
 from discord.ext import commands
 from discord import app_commands
 
-from modules import Optime
-
 
 logger = getLogger("Encer").getChild("sub")
 
-ts = Optime()
+# UNIX時間を記録
+start_time = int(time.time())
 
 
 class Core(commands.Cog):
@@ -22,7 +22,7 @@ class Core(commands.Cog):
 
     @app_commands.command()
     async def monitor(self, interaction: discord.Interaction):
-        await interaction.response.send_message(f"`{self.bot.latency*1000:.0f}`ms\n稼働開始 {ts.optime()}")
+        await interaction.response.send_message(f"`{self.bot.latency*1000:.0f}`ms\n稼働開始:<t:{start_time}:R>")
 
 
 async def setup(bot):

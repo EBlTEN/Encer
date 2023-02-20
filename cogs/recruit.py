@@ -57,7 +57,7 @@ class Recruit(commands.Cog):
                 member_list.remove(f'<@{interaction.user.id}>')
             # listにidが無い場合はValueErrorが出るのでキャッチしてmessage
             except ValueError:
-                await interaction.response.send_message("参加していません。")
+                await interaction.response.send_message("参加していません。", ephemeral=True)
             # 正常に削除できた場合の処理
             else:
                 # listをembedのfieldへ上書き,member_countを+1
