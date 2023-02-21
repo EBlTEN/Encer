@@ -48,8 +48,9 @@ class Recruit(commands.Cog):
                     "すでに参加しています。", ephemeral=True)
             else:
                 # embedのvalueにuser idを,member_countを-1して追記
+                member_count -= 1
                 embed.set_field_at(
-                    0, name=f"あと`{member_count-1}`人", value=f"{message.embeds[0].fields[0].value}\n<@{interaction.user.id}>")
+                    0, name=f"あと`{member_count}`人", value=f"{message.embeds[0].fields[0].value}\n<@{interaction.user.id}>")
                 await interaction.response.send_message("参加しました。", ephemeral=True)
         elif custom_id == "leave":
             # 要素の削除
@@ -61,15 +62,21 @@ class Recruit(commands.Cog):
             # 正常に削除できた場合の処理
             else:
                 # listをembedのfieldへ上書き,member_countを+1
+                member_count += 1
                 embed.set_field_at(
-                    0, name=f"あと`{member_count+1}`人", value="\n".join(member_list))
+                    0, name=f"あと`{member_count}`人", value="\n".join(member_list))
                 # messageの送信
                 await interaction.response.send_message("辞退しました。", ephemeral=True)
 
         # embedをedit
-        await message.edit(embed=embed)
+        if member_count <= 0:
+            # member_countが0以下になったらボタンを消して締める
+            await message.edit(embed=embed, view=None)
+        else:
+            await message.edit(embed=embed)
 
-    @app_commands.command()
+    @app_commands.command(name="rect", description="メンバー募集メッセージを作成する")
+    @app_commands.commands.describe(title="タイトル", limit="最大人数")
     async def rect(self, interaction: discord.Interaction, title: str, limit: int):
         # buttonの作成
         join = discord.ui.Button(
