@@ -68,6 +68,7 @@ class Voice(commands.Cog):
         # embedを作成
         embed = discord.Embed(
             title="Teams", description=f"チーム数:{teams}\n除外:{', '.join(exclusion_names)}\nメンション:{mention}")
+        embed.set_footer(text=f"Encer.commands.Voice")
 
         # n等分
         for i in range(teams):

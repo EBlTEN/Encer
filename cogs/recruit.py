@@ -90,7 +90,7 @@ class Recruit(commands.Cog):
         embed = discord.Embed(title="募集", description=title)
         embed.add_field(name=f"あと`{limit}`人",
                         value=f"<@{interaction.user.id}>")
-        embed.set_footer(text=f"Encer.commands.recruit")
+        embed.set_footer(text=f"Encer.commands.Recruit")
         await interaction.response.send_message(embed=embed, view=view)
         # print(interaction.channel.last_message_id)
 
