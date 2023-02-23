@@ -9,6 +9,14 @@ from discord import app_commands
 
 logger = getLogger("Encer").getChild("sub")
 
+# buttonの作成
+join = discord.ui.Button(
+    label="参加", style=discord.ButtonStyle.primary, custom_id="join")
+leave = discord.ui.Button(
+    label="辞退", style=discord.ButtonStyle.primary, custom_id="leave")
+delete = discord.ui.Button(
+    label="削除(作成者のみ)", style=discord.ButtonStyle.danger, custom_id="delete")
+
 
 class Recruit(commands.Cog):
     def __init__(self, bot):
@@ -67,7 +75,8 @@ class Recruit(commands.Cog):
                     0, name=f"あと`{member_count}`人", value="\n".join(member_list))
                 # messageの送信
                 await interaction.response.send_message("辞退しました。", ephemeral=True)
-        elif custom_id == "delete":
+
+        elif custom_id == "delete":  # 削除
             if str(interaction.user) == embed.author.name:
                 embed = discord.Embed(title="募集", description="削除されました")
                 await message.edit(embed=embed, view=None, delete_after=5)
@@ -76,21 +85,22 @@ class Recruit(commands.Cog):
 
                 # embedをedit
         if member_count <= 0:
-            # member_countが0以下になったらボタンを消して締める
-            await message.edit(embed=embed, view=None)
+            # member_countが0以下になったらボタンを変更して締める
+            view = discord.ui.View()
+            view.add_item(leave)
+            view.add_item(delete)
+            await message.edit(embed=embed, view=view)
         else:
-            await message.edit(embed=embed)
+            view = discord.ui.View()
+            view.add_item(join)  # ここらへんもうちょっとスマートにしたい
+            view.add_item(leave)
+            view.add_item(delete)
+            await message.edit(embed=embed, view=view)
 
     @app_commands.command(name="rect", description="メンバー募集メッセージを作成する")
     @app_commands.commands.describe(title="タイトル", limit="最大人数")
     async def rect(self, interaction: discord.Interaction, title: str, limit: int):
-        # buttonの作成
-        join = discord.ui.Button(
-            label="参加", style=discord.ButtonStyle.primary, custom_id="join")
-        leave = discord.ui.Button(
-            label="辞退", style=discord.ButtonStyle.primary, custom_id="leave")
-        delete = discord.ui.Button(
-            label="削除(作成者のみ)", style=discord.ButtonStyle.danger, custom_id="delete")
+
         view = discord.ui.View()
         view.add_item(join)  # ここらへんもうちょっとスマートにしたい
         view.add_item(leave)
