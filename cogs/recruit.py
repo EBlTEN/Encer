@@ -41,7 +41,7 @@ class Recruit(commands.Cog):
         # 正規表現で人数を取得
         member_count = int(re.sub(r"\D+", "", embed.fields[0].name))
 
-        if custom_id == "join":
+        if custom_id == "join":  # 参加
             # すでにlistの中にidがあったらエラーを返す
             if f"<@{interaction.user.id}>" in member_list:
                 await interaction.response.send_message(
@@ -52,7 +52,7 @@ class Recruit(commands.Cog):
                 embed.set_field_at(
                     0, name=f"あと`{member_count}`人", value=f"{message.embeds[0].fields[0].value}\n<@{interaction.user.id}>")
                 await interaction.response.send_message("参加しました。", ephemeral=True)
-        elif custom_id == "leave":
+        elif custom_id == "leave":  # 辞退
             # 要素の削除
             try:
                 member_list.remove(f'<@{interaction.user.id}>')
@@ -67,8 +67,14 @@ class Recruit(commands.Cog):
                     0, name=f"あと`{member_count}`人", value="\n".join(member_list))
                 # messageの送信
                 await interaction.response.send_message("辞退しました。", ephemeral=True)
+        elif custom_id == "delete":
+            if str(interaction.user) == embed.author.name:
+                await interaction.message.delete()
+                await interaction.response.send_message("削除しました", ephemeral=True)
+            else:
+                await interaction.response.send_message("作成者ではありません", ephemeral=True)
 
-        # embedをedit
+                # embedをedit
         if member_count <= 0:
             # member_countが0以下になったらボタンを消して締める
             await message.edit(embed=embed, view=None)
@@ -83,9 +89,12 @@ class Recruit(commands.Cog):
             label="参加", style=discord.ButtonStyle.primary, custom_id="join")
         leave = discord.ui.Button(
             label="辞退", style=discord.ButtonStyle.primary, custom_id="leave")
+        delete = discord.ui.Button(
+            label="削除(作成者のみ)", style=discord.ButtonStyle.danger, custom_id="delete")
         view = discord.ui.View()
         view.add_item(join)  # ここらへんもうちょっとスマートにしたい
         view.add_item(leave)
+        view.add_item(delete)
         # embedの作成
         embed = discord.Embed(title="募集", description=title)
         embed.set_author(name=interaction.user,
