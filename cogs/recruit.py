@@ -88,6 +88,9 @@ class Recruit(commands.Cog):
         view.add_item(leave)
         # embedの作成
         embed = discord.Embed(title="募集", description=title)
+        embed.set_author(name=interaction.user,
+                         icon_url=interaction.user.avatar.url
+                         )
         embed.add_field(name=f"あと`{limit}`人",
                         value=f"<@{interaction.user.id}>")
         embed.set_footer(text=f"Encer.commands.Recruit")
