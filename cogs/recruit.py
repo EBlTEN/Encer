@@ -69,8 +69,8 @@ class Recruit(commands.Cog):
                 await interaction.response.send_message("辞退しました。", ephemeral=True)
         elif custom_id == "delete":
             if str(interaction.user) == embed.author.name:
-                await interaction.message.delete()
-                await interaction.response.send_message("削除しました", ephemeral=True)
+                embed = discord.Embed(title="募集", description="削除されました")
+                await message.edit(embed=embed, view=None, delete_after=5)
             else:
                 await interaction.response.send_message("作成者ではありません", ephemeral=True)
 
