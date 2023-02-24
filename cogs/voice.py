@@ -17,7 +17,7 @@ class Voice(commands.Cog):
     async def on_ready(self):
         logger.info("%s is loaded", __name__)
 
-    @app_commands.command()
+    @app_commands.command(description="VCのメンバーを指定されたチーム数に分割する")
     @discord.app_commands.choices(
         mention=[
             discord.app_commands.Choice(name="true", value="True"),
