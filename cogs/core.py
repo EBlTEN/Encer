@@ -19,6 +19,7 @@ class Core(commands.GroupCog, group_name="encer"):
     @commands.Cog.listener()
     async def on_ready(self):
         logger.info("%s is loaded", __name__)
+        await self.bot.change_presence(activity=discord.Streaming("/encer help"))
 
     @app_commands.command(description="このbotについて表示する")
     async def about(self, interaction: discord.Interaction):
