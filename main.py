@@ -59,16 +59,16 @@ async def on_ready():
 
 # cogの管理コマンド
 @bot.tree.command(name="cog", description="cogsフォルダ内に存在するcogの管理をする。")
-@discord.app_commands.check(checker.is_owner)
+@app_commands.check(checker.is_owner)
 # モードの入力補完設定
-@discord.app_commands.choices(
+@app_commands.choices(
     mode=[
-        discord.app_commands.Choice(name="load", value="load"),
-        discord.app_commands.Choice(name="reload", value="reload"),
-        discord.app_commands.Choice(name="unload", value="unload")
+        app_commands.Choice(name="load", value="load"),
+        app_commands.Choice(name="reload", value="reload"),
+        app_commands.Choice(name="unload", value="unload")
     ]
 )
-@discord.app_commands.describe(cog="cogsフォルダ内のcogファイル")
+@app_commands.describe(cog="cogsフォルダ内のcogファイル")
 async def cog(interaction: discord.Interaction, mode: str, cog: str):
     # 各モードの処理
     if mode == "load":

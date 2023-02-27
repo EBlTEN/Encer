@@ -18,13 +18,13 @@ class Voice(commands.Cog):
         logger.info("%s is loaded", __name__)
 
     @app_commands.command(description="VCのメンバーを指定されたチーム数に分割する")
-    @discord.app_commands.choices(
+    @app_commands.choices(
         mention=[
-            discord.app_commands.Choice(name="true", value="True"),
-            discord.app_commands.Choice(name="false", value="False"),
+            app_commands.Choice(name="true", value="True"),
+            app_commands.Choice(name="false", value="False"),
         ]
     )
-    @discord.app_commands.describe(teams="用意するチーム数(初期値:2)",
+    @app_commands.describe(teams="用意するチーム数(初期値:2)",
                                    exclusion="チーム分けから除外するメンバーのID",
                                    mention="チームメンバーをメンションするか(初期値:False)")
     async def team(self, interaction: discord.Interaction, teams: int = 2, exclusion: str = "None", mention: str = "False"):

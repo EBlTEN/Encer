@@ -31,7 +31,7 @@ class Core(commands.GroupCog, group_name="encer"):
 
     @app_commands.command(description="helpを表示する")
     async def help(self, interaction: discord.Interaction):
-        def get_group_command_help_text(group: discord.app_commands.Group):
+        def get_group_command_help_text(group: app_commands.Group):
             cmd_name = ""
             group_cmd_count = 0
             group_name = get_command_help_text(group)  # グループ名を取得
@@ -42,7 +42,7 @@ class Core(commands.GroupCog, group_name="encer"):
                 group_cmd_count += 1
             return (group_name[0], cmd_name, group_cmd_count)
 
-        def get_command_help_text(cmd: discord.app_commands.Group | discord.app_commands.Command):
+        def get_command_help_text(cmd: app_commands.Group | app_commands.Command):
             cmd_name = cmd.name
             cmd_description = ""
             if cmd.description != "…":  # 説明がついている場合は説明も取得
@@ -57,7 +57,7 @@ class Core(commands.GroupCog, group_name="encer"):
         commands = self.bot.tree.get_commands()
         for cmd in commands:
             # インスタンスを取得して条件分岐
-            if isinstance(cmd, discord.app_commands.Group):  # グループの場合
+            if isinstance(cmd, app_commands.Group):  # グループの場合
                 group_count += 1
                 cmd_info = get_group_command_help_text(cmd)
                 embed.add_field(
