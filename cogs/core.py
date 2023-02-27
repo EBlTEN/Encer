@@ -29,6 +29,19 @@ class Core(commands.GroupCog, group_name="encer"):
     async def monitor(self, interaction: discord.Interaction):
         await interaction.response.send_message(f"`{self.bot.latency*1000:.0f}`ms\n稼働開始:<t:{start_time}:R>")
 
+    @app_commands.command(description="開発サーバーにメッセージを送信する")
+    async def report(self, interaction: discord.Interaction, message: str):
+        channel = self.bot.get_channel(1079832762766344324)  # メッセージを送るチャンネl
+        embed = discord.Embed(title="report",
+                              description=message)
+        embed.set_author(name=interaction.user,
+                         icon_url=interaction.user.avatar.url
+                         )
+        embed.set_footer(text=f"Encer.commands.Core.report")
+        await channel.send(embed=embed)  # 開発サーバーに送信
+        # ユーザーに返信
+        await interaction.response.send_message("メッセージを送信しました。", ephemeral=True)
+
     @app_commands.command(description="helpを表示する")
     async def help(self, interaction: discord.Interaction):
         def get_group_command_help_text(group: app_commands.Group):
@@ -53,7 +66,7 @@ class Core(commands.GroupCog, group_name="encer"):
         group_count = 0
 
         embed = discord.Embed(title="Encer Help")
-        embed.set_footer(text=f"Encer.commands.Core")
+        embed.set_footer(text=f"Encer.commands.Core.help")
         commands = self.bot.tree.get_commands()
         for cmd in commands:
             # インスタンスを取得して条件分岐
