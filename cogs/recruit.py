@@ -5,6 +5,7 @@ import re
 import discord
 from discord.ext import commands
 from discord import app_commands
+from discord.ui import Modal, View, TextInput
 
 
 logger = getLogger("Encer").getChild("sub")
@@ -38,16 +39,15 @@ class Recruit(commands.Cog):
             pass
 
     async def on_button_click(interaction: discord.Interaction):
-        # 設定していたcustom_idを参照
-        custom_id = interaction.data["custom_id"]
+
+        custom_id = interaction.data["custom_id"]  # 設定していたcustom_idを参照
         # buttonの押されたmessageのidを取得
         message = await interaction.channel.fetch_message(interaction.message.id)
-        # messageのidからembedのオブジェクトを生成
-        embed = message.embeds[0]
-        # embedのvalueを\nを区切り文字としてlistに書き出す
-        member_list = embed.fields[0].value.split("\n")
-        # 正規表現で人数を取得
-        member_count = int(re.sub(r"\D+", "", embed.fields[0].name))
+        embed = message.embeds[0]  # messageのidからembedのオブジェクトを生成
+        member_list = embed.fields[0].value.split(
+            "\n")  # embedのvalueを\nを区切り文字としてlistに書き出す
+        member_count = int(
+            re.sub(r"\D+", "", embed.fields[0].name))  # 正規表現で人数を取得
 
         if custom_id == "join":  # 参加
             # すでにlistの中にidがあったらエラーを返す
@@ -67,31 +67,28 @@ class Recruit(commands.Cog):
             # listにidが無い場合はValueErrorが出るのでキャッチしてmessage
             except ValueError:
                 await interaction.response.send_message("参加していません。", ephemeral=True)
-            # 正常に削除できた場合の処理
-            else:
+
+            else:  # 正常に削除できた場合の処理
                 # listをembedのfieldへ上書き,member_countを+1
                 member_count += 1
                 embed.set_field_at(
                     0, name=f"あと`{member_count}`人", value="\n".join(member_list))
-                # messageの送信
                 await interaction.response.send_message("辞退しました。", ephemeral=True)
 
         elif custom_id == "delete":  # 削除
             if str(interaction.user) == embed.author.name:
                 embed = discord.Embed(title="募集", description="削除されました")
                 await message.edit(embed=embed, view=None, delete_after=5)
-            else:
                 await interaction.response.send_message("作成者ではありません", ephemeral=True)
 
-                # embedをedit
         if member_count <= 0:
             # member_countが0以下になったらボタンを変更して締める
-            view = discord.ui.View()
+            view = View()
             view.add_item(leave)
             view.add_item(delete)
             await message.edit(embed=embed, view=view)
         else:
-            view = discord.ui.View()
+            view = View()
             view.add_item(join)  # ここらへんもうちょっとスマートにしたい
             view.add_item(leave)
             view.add_item(delete)
@@ -101,7 +98,7 @@ class Recruit(commands.Cog):
     @app_commands.commands.describe(title="タイトル", limit="最大人数")
     async def rect(self, interaction: discord.Interaction, title: str, limit: int):
 
-        view = discord.ui.View()
+        view = View()
         view.add_item(join)  # ここらへんもうちょっとスマートにしたい
         view.add_item(leave)
         view.add_item(delete)
