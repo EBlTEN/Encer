@@ -3,13 +3,34 @@ import time
 
 import discord
 from discord.ext import commands
-from discord import app_commands
+from discord import app_commands, ui
 
 
 logger = getLogger("Encer").getChild("sub")
 
 # UNIX時間を記録
 start_time = int(time.time())
+
+
+class MessageForm(ui.Modal, title="お問い合わせ"):
+    form = ui.TextInput(
+        label="意見、要望など", style=discord.TextStyle.paragraph, custom_id="report")
+
+    def __init__(self, bot):
+        super().__init__()
+        self.bot = bot
+
+    async def on_submit(self, interaction: discord.Interaction):
+        channel = self.bot.get_channel(1079832762766344324)
+        embed = discord.Embed(title="report",
+                              description=interaction.data["components"][0]["components"][0]["value"])  # 送信されたメッセージの内容を取得
+        embed.set_author(name=interaction.user,
+                         icon_url=interaction.user.avatar.url
+                         )
+        embed.set_footer(text=f"Encer.commands.Core.report")
+        await channel.send(embed=embed)  # 開発サーバーに送信
+        # ユーザーに返信
+        await interaction.response.send_message("メッセージを送信しました。", ephemeral=True)
 
 
 class Core(commands.GroupCog, group_name="encer"):
@@ -30,17 +51,8 @@ class Core(commands.GroupCog, group_name="encer"):
         await interaction.response.send_message(f"`{self.bot.latency*1000:.0f}`ms\n稼働開始:<t:{start_time}:R>")
 
     @app_commands.command(description="開発サーバーにメッセージを送信する")
-    async def report(self, interaction: discord.Interaction, message: str):
-        channel = self.bot.get_channel(1079832762766344324)  # メッセージを送るチャンネl
-        embed = discord.Embed(title="report",
-                              description=message)
-        embed.set_author(name=interaction.user,
-                         icon_url=interaction.user.avatar.url
-                         )
-        embed.set_footer(text=f"Encer.commands.Core.report")
-        await channel.send(embed=embed)  # 開発サーバーに送信
-        # ユーザーに返信
-        await interaction.response.send_message("メッセージを送信しました。", ephemeral=True)
+    async def report(self, interaction: discord.Interaction):
+        await interaction.response.send_modal(MessageForm(self.bot))
 
     @app_commands.command(description="helpを表示する")
     async def help(self, interaction: discord.Interaction):
