@@ -79,6 +79,7 @@ class Recruit(commands.Cog):
             if str(interaction.user) == embed.author.name:
                 embed = discord.Embed(title="募集", description="削除されました")
                 await message.edit(embed=embed, view=None, delete_after=5)
+            else:
                 await interaction.response.send_message("作成者ではありません", ephemeral=True)
 
         if member_count <= 0:
