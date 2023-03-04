@@ -1,5 +1,6 @@
 from logging import getLogger
 import re
+import asyncio
 
 
 import discord
@@ -98,6 +99,9 @@ class Recruit(commands.Cog):
     @app_commands.command(name="rect", description="メンバー募集メッセージを作成する")
     @app_commands.commands.describe(title="タイトル", limit="最大人数")
     async def rect(self, interaction: discord.Interaction, title: str, limit: int):
+        await interaction.response.send_message(
+            f"メッセージを生成中...\nタイトル:{title}\n募集人数:{limit}")  # 通常メッセージでメンションを飛ばす
+        message = await interaction.original_response()
 
         view = View()
         view.add_item(join)  # ここらへんもうちょっとスマートにしたい
@@ -111,8 +115,8 @@ class Recruit(commands.Cog):
         embed.add_field(name=f"あと`{limit}`人",
                         value=f"<@{interaction.user.id}>")
         embed.set_footer(text=f"Encer.commands.Recruit")
-        await interaction.response.send_message(embed=embed, view=view)
-        # print(interaction.channel.last_message_id)
+        await asyncio.sleep(1)
+        await message.edit(content=None, embed=embed, view=view)
 
 
 async def setup(bot):
