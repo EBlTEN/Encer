@@ -100,7 +100,7 @@ class Recruit(commands.Cog):
     @app_commands.commands.describe(title="タイトル", limit="最大人数")
     async def rect(self, interaction: discord.Interaction, title: str, limit: int):
         await interaction.response.send_message(
-            f"メッセージを生成中...\nタイトル:{title}\n募集人数:{limit}")  # 通常メッセージでメンションを飛ばす
+            f"{title}\nあと{limit}人")  # 通常メッセージでメンションを飛ばす
         message = await interaction.original_response()
 
         view = View()
