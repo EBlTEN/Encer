@@ -18,15 +18,8 @@ class Voice(commands.Cog):
         logger.info("%s is loaded", __name__)
 
     @app_commands.command(description="VCのメンバーを指定されたチーム数に分割する")
-    @app_commands.choices(
-        mention=[
-            app_commands.Choice(name="true", value="True"),
-            app_commands.Choice(name="false", value="False"),
-        ]
-    )
     @app_commands.describe(teams="用意するチーム数(初期値:2)",
-                           exclusion="チーム分けから除外するメンバーのID",
-                           mention="チームメンバーをメンションするか(初期値:False)")
+                           exclusion="チーム分けから除外するメンバーのID")
     async def team(self, interaction: discord.Interaction, teams: int = 2, exclusion: str = "None"):
         # 必要な変数の定義
         exclusion_names = []
@@ -56,13 +49,6 @@ class Voice(commands.Cog):
                 exclusion_names.append(vc_dict[int(exclusion_id)])
                 del vc_dict[int(exclusion_id)]
 
-        # メンションモードの挙動
-        """
-        if mention == "True":
-            member_list = [f"<@{i}>" for i in list(vc_dict.keys())]
-        else:
-            member_list = list(vc_dict.values())
-        """
         member_list = list(vc_dict.values())
         # listをshuffle
         random.shuffle(member_list)
