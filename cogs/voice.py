@@ -50,7 +50,7 @@ class Voice(commands.Cog):
                 exclusion_names.append(vc_dict[int(exclusion_id)])
                 del vc_dict[int(exclusion_id)]
 
-        member_list = list(vc_dict.values())
+        member_list = [f"<@{i}>" for i in list(vc_dict.keys())]
         # listをshuffle
         random.shuffle(member_list)
 
