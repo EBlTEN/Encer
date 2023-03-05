@@ -25,9 +25,9 @@ class Voice(commands.Cog):
         ]
     )
     @app_commands.describe(teams="用意するチーム数(初期値:2)",
-                                   exclusion="チーム分けから除外するメンバーのID",
-                                   mention="チームメンバーをメンションするか(初期値:False)")
-    async def team(self, interaction: discord.Interaction, teams: int = 2, exclusion: str = "None", mention: str = "False"):
+                           exclusion="チーム分けから除外するメンバーのID",
+                           mention="チームメンバーをメンションするか(初期値:False)")
+    async def team(self, interaction: discord.Interaction, teams: int = 2, exclusion: str = "None"):
         # 必要な変数の定義
         exclusion_names = []
 
@@ -57,17 +57,19 @@ class Voice(commands.Cog):
                 del vc_dict[int(exclusion_id)]
 
         # メンションモードの挙動
+        """
         if mention == "True":
             member_list = [f"<@{i}>" for i in list(vc_dict.keys())]
         else:
             member_list = list(vc_dict.values())
-
+        """
+        member_list = list(vc_dict.values())
         # listをshuffle
         random.shuffle(member_list)
 
         # embedを作成
         embed = discord.Embed(
-            title="Teams", description=f"チーム数:{teams}\n除外:{', '.join(exclusion_names)}\nメンション:{mention}")
+            title="Teams", description=f"チーム数:{teams}\n除外:{', '.join(exclusion_names)}\n")
         embed.set_footer(text=f"Encer.commands.Voice")
 
         # n等分
