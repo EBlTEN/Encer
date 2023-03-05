@@ -34,6 +34,7 @@ class Voice(commands.Cog):
             embed.set_footer(
                 text=f"Encer.Voice.error")
             await interaction.response.send_message(embed=embed)
+            return
 
         # 取得した要素の名前とidを抽出してdictにする
         vc_dict = {i.id: i.name for i in vc_members}
