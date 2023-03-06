@@ -7,7 +7,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
-import checker
+import modules
 
 
 # loggerの設定ファイルを読み込み
@@ -44,7 +44,6 @@ class Encer(commands.Bot):
         # self.tree.copy_global_to(guild=Root_guild)
         await self.tree.sync()
 
-
         # intentsの定義
 intents = discord.Intents.all()
 bot = Encer(command_prefix="League_of_legends",
@@ -59,7 +58,7 @@ async def on_ready():
 
 # cogの管理コマンド
 @bot.tree.command(name="cog", description="cogsフォルダ内に存在するcogの管理をする。")
-@app_commands.check(checker.is_owner)
+@app_commands.check(modules.is_owner)
 # モードの入力補完設定
 @app_commands.choices(
     mode=[
@@ -78,8 +77,8 @@ async def cog(interaction: discord.Interaction, mode: str, cog: str):
     elif mode == "unload":
         await bot.unload_extension(f"cogs.{cog}")
 
-    embed = discord.Embed(title="Success", description=f"{cog} has been {mode}ed.",
-                          color=discord.Colour.from_rgb(0, 255, 0))
+    embed = modules.embed(
+        title="Success", description=f"{cog} has been {mode}ed.", status="success")
     await interaction.response.send_message(embed=embed, ephemeral=True)
     logger.info("%s has been %sed.", cog, mode)
 

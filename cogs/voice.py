@@ -5,6 +5,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
+import modules
 
 logger = getLogger("Encer").getChild("sub")
 
@@ -28,11 +29,9 @@ class Voice(commands.Cog):
         try:
             vc_members = interaction.user.voice.channel.members
         except AttributeError:
-            embed = discord.Embed(title="エラー", description="VCのidを取得できませんでした。",
-                                  color=discord.Colour.from_rgb(255, 0, 0))
+            embed = modules.embed(
+                title="エラー", description="VCのidを取得できませんでした。", status="error")
             embed.set_author(name=interaction.command.name)
-            embed.set_footer(
-                text=f"Encer.Voice.error")
             await interaction.response.send_message(embed=embed)
             return
 

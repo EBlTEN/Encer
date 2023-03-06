@@ -5,6 +5,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands, ui
 
+import modules
 
 logger = getLogger("Encer").getChild("sub")
 
@@ -54,6 +55,22 @@ class Core(commands.GroupCog, group_name="encer"):
     async def report(self, interaction: discord.Interaction):
         await interaction.response.send_modal(MessageForm(self.bot))
 
+    @app_commands.command(description="test")
+    async def test(self, interaction: discord.Interaction):
+        embed = modules.embed(
+            title="info", description="これはinfoメッセージです", status="info")
+        await interaction.channel.send(embed=embed)
+        embed = modules.embed(
+            title="info", description="これはsuccessメッセージです", status="success")
+        await interaction.channel.send(embed=embed)
+        embed = modules.embed(
+            title="info", description="これはwarnメッセージです",  status="warn")
+        await interaction.channel.send(embed=embed)
+        embed = modules.embed(
+            title="info", description="これはerrorメッセージです", status="error")
+        await interaction.channel.send(embed=embed)
+        await interaction.response.send_message("送信しました。")
+
     @app_commands.command(description="helpを表示する")
     async def help(self, interaction: discord.Interaction):
         def get_group_command_help_text(group: app_commands.Group):
@@ -77,7 +94,8 @@ class Core(commands.GroupCog, group_name="encer"):
         cmd_count = 0
         group_count = 0
 
-        embed = discord.Embed(title="Encer Help")
+        embed = discord.Embed(title="Encer Help",
+                              url="https://github.com/EBlTEN/Encer/wiki")
         embed.set_footer(text=f"Encer.commands.Core.help")
         commands = self.bot.tree.get_commands()
         for cmd in commands:

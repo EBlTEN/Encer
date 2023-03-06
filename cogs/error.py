@@ -6,6 +6,8 @@ import discord
 from discord.ext import commands
 from discord.app_commands import AppCommandError
 
+import modules
+
 
 logger = getLogger("Encer").getChild("sub")
 
@@ -25,11 +27,9 @@ class Error(commands.Cog):
     async def on_app_command_error(self, interaction: discord.Interaction, error: AppCommandError):
         #        with open("./error_message.json") as msg:
         #            erra = msg["voice"][error]
-        embed = discord.Embed(title=type(error), description=traceback.format_exception_only(type(error), error),
-                              color=discord.Colour.from_rgb(255, 0, 0))
+        embed = modules.embed(title=type(error), description=traceback.format_exception_only(
+            type(error), error), status="error")
         embed.set_author(name=interaction.command.name)
-        embed.set_footer(
-            text=f"Encer.error.message")
         await interaction.response.send_message(embed=embed)
 
         logger.error("%s (ID: %s)", error, interaction.id)
