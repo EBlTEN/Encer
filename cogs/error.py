@@ -25,8 +25,8 @@ class Error(commands.Cog):
         tree.on_error = tree.__class__.on_error
 
     async def on_app_command_error(self, interaction: discord.Interaction, error: AppCommandError):
-        embed = modules.embed(title=type(error), description=traceback.format_exception_only(
-            type(error), error), status="error")
+        embed = modules.embed(
+            title="Error", description=f"{type(error)}\n{traceback.format_exception_only(type(error), error)}")
         embed.set_author(name=interaction.command.name)
         await interaction.response.send_message(embed=embed)
 

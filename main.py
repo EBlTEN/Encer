@@ -67,8 +67,30 @@ async def on_ready():
                 bot.user.id)  # ログインしたらコンソールにメッセージを表示
 
 
+# logファイルの送信コマンド
+@bot.tree.command(description="logファイルを送信する")
+@app_commands.check(modules.is_owner)
+async def log(interaction: discord.Interaction, number: int = None):
+    # バックアップファイルを指定したときの処理
+    if number != None:
+        file_name = f"Encer.log.{number}"
+    else:
+        file_name = "Encer.log"
+
+    try:
+        log_file = discord.File(f"./{file_name}", filename=file_name)
+        embed = modules.embed(
+            title="Success", description="logファイルの送信に成功しました。")
+    except FileNotFoundError:  # ファイルが見つからなかったらエラー
+        embed = modules.embed(
+            title="Error", description=f"{file_name}は存在しません。")
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
+    await interaction.response.send_message(file=log_file, ephemeral=True)
+
+
 # cogの管理コマンド
-@bot.tree.command(name="cog", description="cogsフォルダ内に存在するcogの管理をする。")
+@bot.tree.command(description="cogsフォルダ内に存在するcogの管理をする。")
 @app_commands.check(modules.is_owner)
 # モードの入力補完設定
 @app_commands.choices(
@@ -89,7 +111,7 @@ async def cog(interaction: discord.Interaction, mode: str, cog: str):
         await bot.unload_extension(f"cogs.{cog}")
 
     embed = modules.embed(
-        title="Success", description=f"{cog} has been {mode}ed.", status="success")
+        title="Success", description=f"{cog} has been {mode}ed.")
     await interaction.response.send_message(embed=embed, ephemeral=True)
     logger.info("%s has been %sed.", cog, mode)
 

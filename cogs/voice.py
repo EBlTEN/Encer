@@ -29,7 +29,7 @@ class Voice(commands.Cog):
             vc_members = interaction.user.voice.channel.members
         except AttributeError:
             embed = modules.embed(
-                title="エラー", description="VCのidを取得できませんでした。", status="error")
+                title="Error", description="VCのidを取得できませんでした。")
             embed.set_author(name=interaction.command.name)
             await interaction.response.send_message(embed=embed)
             return
