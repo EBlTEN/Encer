@@ -94,4 +94,4 @@ async def cog(interaction: discord.Interaction, mode: str, cog: str):
     logger.info("%s has been %sed.", cog, mode)
 
 TOKEN = os.environ['DISCORD_TOKEN']
-bot.run(TOKEN)  # Bot本体の起動
+bot.run(TOKEN, log_handler=None)  # Bot本体の起動
