@@ -7,10 +7,8 @@ from discord import app_commands, ui
 
 import modules
 
-logger = getLogger("Encer").getChild("sub")
-
-# UNIX時間を記録
-start_time = int(time.time())
+logger = getLogger(f"discord.{__name__}")
+start_time = int(time.time())  # UNIX時間を記録
 
 
 class MessageForm(ui.Modal, title="お問い合わせ"):
@@ -40,7 +38,7 @@ class Core(commands.GroupCog, group_name="encer"):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        logger.info("%s is loaded", __name__)
+        logger.info("File has been loaded successfully")
         await self.bot.change_presence(activity=discord.Game(name="/encer help"))
 
     @app_commands.command(description="このbotについて表示する")

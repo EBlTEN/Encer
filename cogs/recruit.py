@@ -9,7 +9,7 @@ from discord import app_commands
 from discord.ui import Modal, View, TextInput
 
 
-logger = getLogger("Encer").getChild("sub")
+logger = getLogger(f"discord.{__name__}")
 
 # buttonの作成
 join = discord.ui.Button(
@@ -26,7 +26,7 @@ class Recruit(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        logger.info("%s is loaded", __name__)
+        logger.info("File has been loaded successfully")
 
     # buttonが押されたときの処理
     @commands.Cog.listener()

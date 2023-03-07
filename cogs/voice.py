@@ -7,7 +7,7 @@ from discord import app_commands
 
 import modules
 
-logger = getLogger("Encer").getChild("sub")
+logger = getLogger(f"discord.{__name__}")
 
 
 class Voice(commands.Cog):
@@ -16,14 +16,13 @@ class Voice(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        logger.info("%s is loaded", __name__)
+        logger.info("File has been loaded successfully")
 
     @app_commands.command(description="VCのメンバーを指定されたチーム数に分割する")
     @app_commands.describe(teams="用意するチーム数(初期値:2)",
                            exclusion="チーム分けから除外するメンバーのID")
     async def team(self, interaction: discord.Interaction, teams: int = 2, exclusion: str = "None"):
-        # 必要な変数の定義
-        exclusion_names = []
+        exclusion_names = []  # 必要な変数の定義
 
         # VCのメンバーをlistで取得
         try:
@@ -41,8 +40,7 @@ class Voice(commands.Cog):
         # exclusion引数に入っているIDがある場合の処理
         if exclusion != "None":
             logger.debug("Variable exclusion is found")
-            # ","を区切り文字としてidをlistに入れる
-            exclusion_list = exclusion.split(",")
+            exclusion_list = exclusion.split(",")  # ","を区切り文字としてidをlistに入れる
             # 作成したlistを元にメンバーリストから値を削除
             for exclusion_id in exclusion_list:
                 # dictにidで検索かけて除外者リストを作成
@@ -50,8 +48,7 @@ class Voice(commands.Cog):
                 del vc_dict[int(exclusion_id)]
 
         member_list = [f"<@{i}>" for i in list(vc_dict.keys())]
-        # listをshuffle
-        random.shuffle(member_list)
+        random.shuffle(member_list)  # listをshuffle
 
         # embedを作成
         embed = discord.Embed(
@@ -63,8 +60,7 @@ class Voice(commands.Cog):
             embed.add_field(name=f"Team{i+1}",
                             value="\n".join(member_list[i:len(member_list):teams]))
 
-        # embedを送信
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed)  # embedを送信
 
 
 async def setup(bot):

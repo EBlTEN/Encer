@@ -9,7 +9,7 @@ from discord.app_commands import AppCommandError
 import modules
 
 
-logger = getLogger("Encer").getChild("sub")
+logger = getLogger(f"discord.{__name__}")
 
 
 class Error(commands.Cog):
@@ -25,8 +25,6 @@ class Error(commands.Cog):
         tree.on_error = tree.__class__.on_error
 
     async def on_app_command_error(self, interaction: discord.Interaction, error: AppCommandError):
-        #        with open("./error_message.json") as msg:
-        #            erra = msg["voice"][error]
         embed = modules.embed(title=type(error), description=traceback.format_exception_only(
             type(error), error), status="error")
         embed.set_author(name=interaction.command.name)
@@ -36,7 +34,7 @@ class Error(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        logger.info("%s is loaded", __name__)
+        logger.info("File has been loaded successfully")
 
 
 async def setup(bot):

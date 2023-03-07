@@ -1,9 +1,11 @@
 import discord
 import inspect
+import logging
 
 owner_id = [501340685757186059, 585858021415190550]
 
 
+# botの開発者かどうか判定する
 def is_owner(interaction: discord.Interaction) -> bool:
     return interaction.user.id in owner_id
 
@@ -22,4 +24,4 @@ def embed(*, title, status, description=None, url=None):
         color = color_list[status]
     except KeyError:  # 不明なstatusは黒色へ置換
         color = discord.Colour.from_rgb(0, 0, 0)
-    return discord.Embed(title=title, description=description, colour=color, url=url,).set_footer(text=f"Encer.{func_name}.{status}",)
+    return discord.Embed(title=title, description=description, colour=color, url=url,).set_footer(text=f"Encer.{func_name}.{status}")

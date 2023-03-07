@@ -1,7 +1,6 @@
-import json
-from logging import getLogger, config
+import logging
+import logging.handlers
 import os
-import time
 
 import discord
 from discord.ext import commands
@@ -9,26 +8,40 @@ from discord import app_commands
 
 import modules
 
+# loggerインスタンスの生成
+logger = logging.getLogger("discord")
+logger.setLevel(logging.DEBUG)
+logging.getLogger("discord.http").setLevel(logging.INFO)
 
-# loggerの設定ファイルを読み込み
-with open("./log_config.json", "r")as f:
-    log_config = json.load(f)
+# フォーマット
+dt_fmt = "%Y-%m-%d %H:%M:%S"
+formatter = logging.Formatter(
+    "[{asctime}] [{levelname:<8}] {name}: {message}", dt_fmt, style="{")
 
-config.dictConfig(log_config)
+# ファイルに出力するlogの設定
+file_handler = logging.handlers.RotatingFileHandler(
+    filename="Encer.log",
+    encoding="utf-8",
+    maxBytes=8 * 1024*1024,
+    backupCount=5
+)
+file_handler.setFormatter(formatter)
 
-# loggerインスタンス
-logger = getLogger("Encer")
+# コンソールに出力するlogの設定
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+console_handler.setFormatter(formatter)
 
-# デバッグ用のサーバーID
-Root_guild = discord.Object(681015774885838896)
+# loggerにhandlerを追加
+logger.addHandler(console_handler)
+logger.addHandler(file_handler)
 
-# cogのリストを生成
-cog_list = []
+Root_guild = discord.Object(681015774885838896)  # デバッグ用のサーバーID
+cog_list = []  # cogのリストを生成
 
 for filename in os.listdir("./cogs"):
     if filename.endswith(".py"):
         cog_list.append(filename[:-3])
-print(cog_list)
 
 
 class Encer(commands.Bot):
@@ -40,20 +53,18 @@ class Encer(commands.Bot):
         except Exception as err:
             logger.error(err)
 
-        # slash commandを登録
-        # self.tree.copy_global_to(guild=Root_guild)
-        await self.tree.sync()
+        await self.tree.sync()  # slash commandを登録
 
-        # intentsの定義
-intents = discord.Intents.all()
+
+intents = discord.Intents.all()  # intentsの定義
 bot = Encer(command_prefix="League_of_legends",
             intents=intents, help_command=None)
 
 
 @bot.event
 async def on_ready():
-    # ログインしたらコンソールにメッセージを表示
-    logger.info("Logged in to %s (ID: %s)", bot.user, bot.user.id)
+    logger.info("Logged in to %s (ID: %s)", bot.user,
+                bot.user.id)  # ログインしたらコンソールにメッセージを表示
 
 
 # cogの管理コマンド
@@ -82,7 +93,5 @@ async def cog(interaction: discord.Interaction, mode: str, cog: str):
     await interaction.response.send_message(embed=embed, ephemeral=True)
     logger.info("%s has been %sed.", cog, mode)
 
-
-# Bot本体の起動
 TOKEN = os.environ['DISCORD_TOKEN']
-bot.run(TOKEN)
+bot.run(TOKEN)  # Bot本体の起動
