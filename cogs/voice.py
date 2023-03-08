@@ -1,9 +1,9 @@
-from logging import getLogger
 import random
+from logging import getLogger
 
 import discord
-from discord.ext import commands
 from discord import app_commands
+from discord.ext import commands
 
 import modules
 
@@ -30,8 +30,7 @@ class Voice(commands.Cog):
         except AttributeError:
             embed = modules.embed(
                 title="Error", description="VCのidを取得できませんでした。")
-            embed.set_author(name=interaction.command.name)
-            await interaction.response.send_message(embed=embed)
+            await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
         # 取得した要素の名前とidを抽出してdictにする
@@ -51,9 +50,8 @@ class Voice(commands.Cog):
         random.shuffle(member_list)  # listをshuffle
 
         # embedを作成
-        embed = discord.Embed(
+        embed = modules.embed(
             title="Teams", description=f"チーム数:{teams}\n除外:{', '.join(exclusion_names)}\n")
-        embed.set_footer(text=f"Encer.commands.Voice")
 
         # n等分
         for i in range(teams):

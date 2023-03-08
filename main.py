@@ -3,8 +3,8 @@ import logging.handlers
 import os
 
 import discord
-from discord.ext import commands
 from discord import app_commands
+from discord.ext import commands
 
 import modules
 
@@ -80,7 +80,7 @@ async def log(interaction: discord.Interaction, number: int = None):
     try:
         log_file = discord.File(f"./{file_name}", filename=file_name)
         embed = modules.embed(
-            title="Success", description="logファイルの送信に成功しました。")
+            title="Info", description="logファイルの送信に成功しました。")
     except FileNotFoundError:  # ファイルが見つからなかったらエラー
         embed = modules.embed(
             title="Error", description=f"{file_name}は存在しません。")

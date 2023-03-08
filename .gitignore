@@ -128,3 +128,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 debug.py
+cogs/cmd_test.py

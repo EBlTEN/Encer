@@ -1,13 +1,13 @@
-from logging import getLogger
-import re
 import asyncio
-
+import re
+from logging import getLogger
 
 import discord
-from discord.ext import commands
 from discord import app_commands
-from discord.ui import Modal, View, TextInput
+from discord.ext import commands
+from discord.ui import Modal, TextInput, View
 
+import modules
 
 logger = getLogger(f"discord.{__name__}")
 
@@ -53,35 +53,45 @@ class Recruit(commands.Cog):
         if custom_id == "join":  # 参加
             # すでにlistの中にidがあったらエラーを返す
             if f"<@{interaction.user.id}>" in member_list:
-                await interaction.response.send_message(
-                    "すでに参加しています。", ephemeral=True)
+                output_embed = modules.embed(
+                    title="Warn", description="すでに参加しています。")
+                await interaction.response.send_message(embed=output_embed, ephemeral=True)
             else:
                 # embedのvalueにuser idを,member_countを-1して追記
                 member_count -= 1
                 embed.set_field_at(
                     0, name=f"あと`{member_count}`人", value=f"{message.embeds[0].fields[0].value}\n<@{interaction.user.id}>")
-                await interaction.response.send_message("参加しました。", ephemeral=True)
+                output_embed = modules.embed(
+                    title="Info", description="参加しました。")
+                await interaction.response.send_message(embed=output_embed, ephemeral=True)
         elif custom_id == "leave":  # 辞退
             # 要素の削除
             try:
                 member_list.remove(f'<@{interaction.user.id}>')
             # listにidが無い場合はValueErrorが出るのでキャッチしてmessage
             except ValueError:
-                await interaction.response.send_message("参加していません。", ephemeral=True)
+                output_embed = modules.embed(
+                    title="Warn", description="参加していません。")
+                await interaction.response.send_message(embed=output_embed, ephemeral=True)
 
             else:  # 正常に削除できた場合の処理
                 # listをembedのfieldへ上書き,member_countを+1
                 member_count += 1
                 embed.set_field_at(
                     0, name=f"あと`{member_count}`人", value="\n".join(member_list))
-                await interaction.response.send_message("辞退しました。", ephemeral=True)
+
+                output_embed = modules.embed(
+                    title="Info", description="辞退しました。")
+                await interaction.response.send_message(embed=output_embed, ephemeral=True)
 
         elif custom_id == "delete":  # 削除
             if str(interaction.user) == embed.author.name:
-                embed = discord.Embed(title="募集", description="削除されました")
+                embed = modules.embed(title="募集", description="削除されました")
                 await message.edit(embed=embed, view=None, delete_after=5)
             else:
-                await interaction.response.send_message("作成者ではありません", ephemeral=True)
+                output_embed = modules.embed(
+                    title="Error", description="削除に失敗しました\n削除はコマンドの実行者のみ行えます。")
+                await interaction.response.send_message(embed=output_embed, ephemeral=True)
 
         if member_count <= 0:
             # member_countが0以下になったらボタンを変更して締める
@@ -108,13 +118,12 @@ class Recruit(commands.Cog):
         view.add_item(leave)
         view.add_item(delete)
         # embedの作成
-        embed = discord.Embed(title="募集", description=title)
+        embed = modules.embed(title="募集", description=title)
         embed.set_author(name=interaction.user,
                          icon_url=interaction.user.avatar.url
                          )
         embed.add_field(name=f"あと`{limit}`人",
                         value=f"<@{interaction.user.id}>")
-        embed.set_footer(text=f"Encer.commands.Recruit")
         await asyncio.sleep(1)
         await message.edit(content=None, embed=embed, view=view)
 

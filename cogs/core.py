@@ -1,9 +1,9 @@
-from logging import getLogger
 import time
+from logging import getLogger
 
 import discord
-from discord.ext import commands
 from discord import app_commands, ui
+from discord.ext import commands
 
 import modules
 
@@ -21,7 +21,7 @@ class MessageForm(ui.Modal, title="お問い合わせ"):
 
     async def on_submit(self, interaction: discord.Interaction):
         channel = self.bot.get_channel(1079832762766344324)
-        embed = discord.Embed(title="report",
+        embed = modules.embed(title="report",
                               description=interaction.data["components"][0]["components"][0]["value"])  # 送信されたメッセージの内容を取得
         embed.set_author(name=interaction.user,
                          icon_url=interaction.user.avatar.url
@@ -29,7 +29,8 @@ class MessageForm(ui.Modal, title="お問い合わせ"):
         embed.set_footer(text=f"Encer.commands.Core.report")
         await channel.send(embed=embed)  # 開発サーバーに送信
         # ユーザーに返信
-        await interaction.response.send_message("メッセージを送信しました。", ephemeral=True)
+        embed = modules.embed(title="Info", description="メッセージを送信しました。")
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 class Core(commands.GroupCog, group_name="encer"):
@@ -43,11 +44,13 @@ class Core(commands.GroupCog, group_name="encer"):
 
     @app_commands.command(description="このbotについて表示する")
     async def about(self, interaction: discord.Interaction):
-        await interaction.response.send_message("https://github.com/EBlTEN/Encer")
+        await interaction.response.send_message("https://github.com/EBlTEN/Encer", ephemeral=True)
 
     @app_commands.command(description="このbotの状態を表示する")
     async def monitor(self, interaction: discord.Interaction):
-        await interaction.response.send_message(f"`{self.bot.latency*1000:.0f}`ms\n稼働開始:<t:{start_time}:R>")
+        embed = modules.embed(
+            title="Info", description=f"`{self.bot.latency*1000:.0f}`ms\n稼働開始:<t:{start_time}:R>")
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(description="開発サーバーにメッセージを送信する")
     async def report(self, interaction: discord.Interaction):
@@ -76,9 +79,8 @@ class Core(commands.GroupCog, group_name="encer"):
         cmd_count = 0
         group_count = 0
 
-        embed = discord.Embed(title="Encer Help",
+        embed = modules.embed(title="Encer Help",
                               url="https://github.com/EBlTEN/Encer/wiki")
-        embed.set_footer(text=f"Encer.commands.Core.help")
         commands = self.bot.tree.get_commands()
         for cmd in commands:
             # インスタンスを取得して条件分岐
@@ -95,7 +97,7 @@ class Core(commands.GroupCog, group_name="encer"):
                                 value=cmd_info[1], inline=True)
 
         embed.description = f"コマンド数:`{cmd_count}`\nグループ数:`{group_count}`"
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 async def setup(bot):
